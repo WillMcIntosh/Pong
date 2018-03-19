@@ -11,33 +11,52 @@ public class Pong extends Applet implements Runnable, KeyListener {
 
     Thread thread;
     HumanPaddle p1;
+    AIPaddle p2;
     Ball b1;
+    boolean gameStarted;
+    Graphics gfx;
+    Image img;
 
 
     public void init() {
         this.resize(WIDTH, HEIGHT);
+        gameStarted = false;
         this.addKeyListener(this);
         p1 = new HumanPaddle(1);
         b1 = new Ball();
-
+        p2 = new AIPaddle(2, b1);
+        img = createImage(WIDTH, HEIGHT);
+        gfx = img.getGraphics();
         thread = new Thread(this);
         thread.start();
 
     }
 
+    // paint onto offscreen buffer and then display to screen
+    // to prevent flickering effect
+
     public void paint(Graphics g) {
-        g.setColor(Color.black);
-        g.fillRect(0,0, WIDTH, HEIGHT);
+        gfx.setColor(Color.black);
+        gfx.fillRect(0,0, WIDTH, HEIGHT);
 
         // if ball goes off screen, display a game over
         if (b1.getX() < -10 || b1.getX() > 710) {
-            g.setColor(Color.red);
-            g.drawString("GAME OVER", 335, 250);
+            gfx.setColor(Color.red);
+            gfx.drawString("GAME OVER", 335, 250);
         }
         else {
-            p1.draw(g);
-            b1.draw(g);
+            p1.draw(gfx);
+            b1.draw(gfx);
+            p2.draw(gfx);
         }
+
+        if (!gameStarted) {
+            gfx.setColor(Color.white);
+            gfx.drawString("PONG!", 335, 100);
+            gfx.drawString("Press Enter to Begin...", 290, 130);
+        }
+
+        g.drawImage(img, 0, 0, this);
 
     }
 
@@ -48,10 +67,13 @@ public class Pong extends Applet implements Runnable, KeyListener {
     @Override
     public void run() {
         for (;;){
+            if (gameStarted) {
+                p1.move();
+                p2.move();
+                b1.move();
+                b1.checkPaddleCollision(p1, p2);
+            }
 
-            p1.move();
-            b1.move();
-            b1.checkPaddleCollision(p1, p1);
 
             // infinite loop to run game
             // pause every 10 ms after a repaint
@@ -77,6 +99,9 @@ public class Pong extends Applet implements Runnable, KeyListener {
         }
         else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
             p1.setDownAccel(true);
+        }
+        else if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+            gameStarted = true;
         }
 
     }
