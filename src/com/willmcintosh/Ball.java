@@ -69,4 +69,12 @@ public class Ball {
     public int getY() {
         return (int) y;
     }
+
+    public void setxVel(double xVel) {
+        this.xVel = xVel;
+    }
+
+    public void setyVel(double yVel) {
+        this.yVel = yVel;
+    }
 }

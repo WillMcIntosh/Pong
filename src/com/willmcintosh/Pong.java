@@ -14,6 +14,7 @@ public class Pong extends Applet implements Runnable, KeyListener {
     AIPaddle p2;
     Ball b1;
     boolean gameStarted;
+    boolean gameOver;
     Graphics gfx;
     Image img;
 
@@ -21,6 +22,7 @@ public class Pong extends Applet implements Runnable, KeyListener {
     public void init() {
         this.resize(WIDTH, HEIGHT);
         gameStarted = false;
+        gameOver = false;
         this.addKeyListener(this);
         p1 = new HumanPaddle(1);
         b1 = new Ball();
@@ -41,8 +43,14 @@ public class Pong extends Applet implements Runnable, KeyListener {
 
         // if ball goes off screen, display a game over
         if (b1.getX() < -10 || b1.getX() > 710) {
+            // stop the ball when it goes off screen because it
+            // will bounce back if it hits the "top" or bottom offscreen
+            b1.setxVel(0.0);
+            b1.setyVel(0.0);
             gfx.setColor(Color.red);
-            gfx.drawString("GAME OVER", 335, 250);
+            gfx.drawString("GAME OVER", 330, 100);
+//            gfx.drawString("Press Enter to Play Again", 280, 130);
+//            gameOver = true;
         }
         else {
             p1.draw(gfx);
@@ -101,6 +109,10 @@ public class Pong extends Applet implements Runnable, KeyListener {
             p1.setDownAccel(true);
         }
         else if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+//            if (gameOver) {
+//                gameOver = false;
+//                gameStarted = true;
+//            }
             gameStarted = true;
         }
 
