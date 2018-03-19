@@ -20,9 +20,30 @@ public class Ball {
         g.fillOval((int)x - 10, (int)y - 10, 20, 20);
     }
 
+    public void checkPaddleCollision(Paddle p1, Paddle p2) {
+        // when ball is at x = 50, it is touching the left paddle
+        if (x <=50) {
+            if (y >= p1.getY() && y <= p1.getY() + 80) {
+                xVel = -xVel;
+            }
+        }
+        else if (x >= 650) {
+            if (y >= p2.getY() && y <= p2.getY() + 80) {
+                xVel = -xVel;
+            }
+        }
+    }
+
     public void move() {
         x += xVel;
         y += yVel;
+
+        if (y < 10) {
+            yVel = -yVel;
+        }
+        if (y > 490) {
+            yVel = -yVel;
+        }
     }
 
     public int getX() {
