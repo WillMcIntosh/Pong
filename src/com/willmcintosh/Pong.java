@@ -49,8 +49,8 @@ public class Pong extends Applet implements Runnable, KeyListener {
             b1.setyVel(0.0);
             gfx.setColor(Color.red);
             gfx.drawString("GAME OVER", 330, 100);
-//            gfx.drawString("Press Enter to Play Again", 280, 130);
-//            gameOver = true;
+            gfx.drawString("Press Space to Play Again", 280, 130);
+            gameOver = true;
         }
         else {
             p1.draw(gfx);
@@ -109,11 +109,16 @@ public class Pong extends Applet implements Runnable, KeyListener {
             p1.setDownAccel(true);
         }
         else if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
-//            if (gameOver) {
-//                gameOver = false;
-//                gameStarted = true;
-//            }
             gameStarted = true;
+        }
+        else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+            if (gameOver) {
+                p1 = new HumanPaddle(1);
+                b1 = new Ball();
+                p2 = new AIPaddle(2, b1);
+                gameOver = !gameOver;
+                gameStarted = false;
+            }
         }
 
     }
